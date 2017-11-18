@@ -1,0 +1,13 @@
+D:\Work\Code\FrameWork\WpfApp1\Framework\bin\Debug\Framework.dll
+D:\Work\Code\FrameWork\WpfApp1\Framework\bin\Debug\Framework.pdb
+D:\Work\Code\FrameWork\WpfApp1\Framework\bin\Debug\Spring.Aop.dll
+D:\Work\Code\FrameWork\WpfApp1\Framework\bin\Debug\Spring.Core.dll
+D:\Work\Code\FrameWork\WpfApp1\Framework\bin\Debug\Common.Logging.dll
+D:\Work\Code\FrameWork\WpfApp1\Framework\bin\Debug\Spring.Aop.pdb
+D:\Work\Code\FrameWork\WpfApp1\Framework\bin\Debug\Spring.Aop.xml
+D:\Work\Code\FrameWork\WpfApp1\Framework\bin\Debug\Spring.Core.pdb
+D:\Work\Code\FrameWork\WpfApp1\Framework\bin\Debug\Spring.Core.xml
+D:\Work\Code\FrameWork\WpfApp1\Framework\obj\Debug\Framework.csprojResolveAssemblyReference.cache
+D:\Work\Code\FrameWork\WpfApp1\Framework\obj\Debug\Framework.csproj.CoreCompileInputs.cache
+D:\Work\Code\FrameWork\WpfApp1\Framework\obj\Debug\Framework.dll
+D:\Work\Code\FrameWork\WpfApp1\Framework\obj\Debug\Framework.pdb
