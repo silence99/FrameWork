@@ -4,6 +4,8 @@ using Spring.Aop.Support;
 using Spring.Aop;
 using System;
 using System.Reflection;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace ConsoleApp1
 {
@@ -11,14 +13,12 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            var factory = new ProxyFactoryObject() { Target = new ServiceCommand(),  ProxyTargetType = true};
-            //factory.AddAdvice(new ConsoleLoggingAroundAdvice());
-            factory.AddAdvisor(new DefaultPointcutAdvisor(new PropertyMethodMatchPointcut(), new ConsoleLoggingAroundAdvice()));
-            var command = (ServiceCommand)factory.GetObject();
-
-            command.Name = "name";
-            //command.Execute("This is the argument");
-            Console.Read();
+            List<string> a = new List<string>()
+            {
+                "abc",
+                "def"
+            };
+            var s = a.Where(item => item == "a");
         }
     }
 
@@ -42,10 +42,10 @@ namespace ConsoleApp1
     {
         public object Invoke(IMethodInvocation invocation)
         {
-            Console.Out.WriteLine("Advice executing; calling the advised method..."); 
+            Console.Out.WriteLine("Advice executing; calling the advised method...");
             object returnValue = invocation.Proceed();
             Console.Out.WriteLine("Advice executed; advised method returned " + returnValue);
-            return returnValue; 
+            return returnValue;
         }
     }
 

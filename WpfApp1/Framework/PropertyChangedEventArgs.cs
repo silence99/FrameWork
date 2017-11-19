@@ -8,6 +8,7 @@ namespace Framework
         public object OldValue { get; set; }
         public object NewValue { get; set; }
         public string PropertyName { get; set; }
-        public bool UserInit { get; set; }
+        public bool UserInited { get; set; }
+        public bool UIChanged { get; set; }
     }
 }

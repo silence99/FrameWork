@@ -1,1 +1,6 @@
-
+bin/
+obj/
+.suo
+/.vs/
+storage.ide
+v15/

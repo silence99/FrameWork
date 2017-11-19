@@ -3,10 +3,10 @@
     public delegate void PropertyChangedHandlerEx(object sender, PropertyChangedEventArgs args);
     public interface INotifyPropertyChangedEx
     {
-        event PropertyChangedHandlerEx PropertyChanged;
+        event PropertyChangedHandlerEx PropertyChangedEx;
     }
     public interface INotifyPropertyChangingEx
     {
-        event PropertyChangedHandlerEx PropertyChanging;
+        event PropertyChangedHandlerEx PropertyChangingEx;
     }
 }
