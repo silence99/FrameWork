@@ -2,7 +2,7 @@
 
 namespace Framework
 {
-    public abstract class UiModelBase : NotifiableObject
+    public abstract class UiModel : NotifiableObject
     {
         protected virtual Dictionary<string, MetaData> MetaData { get; set; }
         public abstract void Bind();

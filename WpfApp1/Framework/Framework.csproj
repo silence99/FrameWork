@@ -61,9 +61,10 @@
     <Compile Include="PropertyInterceptor.cs" />
     <Compile Include="PropertyMethodMatchPointcut.cs" />
     <Compile Include="ProxyFactoryExtendion.cs" />
-    <Compile Include="StrategyBase.cs" />
+    <Compile Include="Strategy.cs" />
+    <Compile Include="StrategyController.cs" />
     <Compile Include="StrategyRegistry.cs" />
-    <Compile Include="UiModelBase.cs" />
+    <Compile Include="UiModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

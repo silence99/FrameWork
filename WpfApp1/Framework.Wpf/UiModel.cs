@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace Framework.Wpf
 {
-    public class UiModel : UiModelBase
+    public class UiModel : Framework.UiModel
     {
         private Control Container { get; set; }
         public UiModel(Control container)

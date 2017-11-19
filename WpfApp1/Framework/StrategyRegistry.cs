@@ -30,7 +30,7 @@ namespace Framework
             Unregister(notifier, propertyName, changingHandler, changedHandler);
         }
 
-        public void Invoke(object notifier, PropertyChangedEventArgs args, PropertyChangeEvent eventType)
+        public void Invoke(NotifiableObject notifier, PropertyChangedEventArgs args, PropertyChangeEvent eventType)
         {
             if (notifier != null)
             {
