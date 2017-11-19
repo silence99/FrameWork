@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Framework
 {
-    internal class StrategyRegistry
+    internal class StrategyRegistry : Dictionary<NotifiableObject, Dictionary<string, object>>
     {
+
     }
 }

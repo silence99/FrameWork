@@ -9,9 +9,6 @@ namespace UnitTestProject1
         [TestMethod]
         public void TestCreateAop()
         {
-            TestCls obj = new TestCls();
-            var t = obj.GetAop<TestCls>();
-            t.Name = "abc";
         }
     }
 

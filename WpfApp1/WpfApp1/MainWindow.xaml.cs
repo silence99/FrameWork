@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,58 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
+
+            var mydata = btnTest.GetBindingExpression(ContentProperty).DataItem as MyData;
+            var before = DateTime.Now;
+            //mydata.Name = "KKKKKK";
+            mydata.NoUse = "hhh";
+            var span = DateTime.Now - before;
+            mydata.Span = span.Milliseconds;
         }
+    }
+
+    public class MyData : INotifyPropertyChanged
+    {
+        private string _name;
+        private double _span;
+        private string _noUse;
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                _name = value;
+            }
+        }
+
+        public double Span
+        {
+            get
+            {
+                return _span;
+            }
+            set
+            {
+                _span = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("Span"));
+            }
+        }
+        public string NoUse
+        {
+            get
+            {
+                return _noUse;
+            }
+            set
+            {
+                _noUse = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("NoUse"));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

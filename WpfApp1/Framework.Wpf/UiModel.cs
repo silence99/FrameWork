@@ -19,7 +19,6 @@ namespace Framework.Wpf
         {
             if (Container != null)
             {
-                Container.bi
             }
         }
     }

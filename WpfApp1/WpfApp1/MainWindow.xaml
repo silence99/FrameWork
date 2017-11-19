@@ -7,6 +7,12 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Grid.Resources >
+            <local:MyData x:Key="btnContent"/>
+        </Grid.Resources>
+        <DockPanel DataContext="{StaticResource btnContent}">
+            <Button Name="btnTest"  Content="{Binding Path=Name}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="173" Height="77"/>
+            <Label Content="{Binding Path=Span}" Height="42" Width="293" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        </DockPanel>
     </Grid>
 </Window>
