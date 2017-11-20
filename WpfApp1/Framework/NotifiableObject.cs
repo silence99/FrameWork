@@ -3,13 +3,14 @@ using log4net;
 using Spring.Aop.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
-using System.Linq;
 
 namespace Framework
 {
-    public class NotifiableObject : INotifyPropertyChangedEx, INotifyPropertyChangingEx
+    public class NotifiableObject : INotifyPropertyChangedEx, INotifyPropertyChangingEx, INotifyPropertyChanged
     {
         protected virtual ILog Logger { get; set; }
         protected virtual ErrorHandler ErrorHandler { get; set; }
@@ -19,18 +20,17 @@ namespace Framework
 
         public List<PropertyChangeError> Errors { get; set; }
 
-        protected virtual object AopWapper { get; set; }
+        public virtual object AopWapper { get; set; }
 
         public event PropertyChangedHandlerEx PropertyChangingEx;
         public event PropertyChangedHandlerEx PropertyChangedEx;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private static int _initialization = 0;
-        private static object _syncObj = new object();
-        //private static Dictionary<NotifiableObject, Dictionary<string, PropertyChangedHandlerEx>> _notifiedChangingRepository = new Dictionary<NotifiableObject, Dictionary<string, PropertyChangedHandlerEx>>();
-        //private static Dictionary<NotifiableObject, Dictionary<string, PropertyChangedHandlerEx>> _notifiedChangedRepository = new Dictionary<NotifiableObject, Dictionary<string, PropertyChangedHandlerEx>>();
-        private List<string> _eventStack = new List<string>();
+        private static Stack<KeyValuePair<NotifiableObject, string>> _eventStack = new Stack<KeyValuePair<NotifiableObject, string>>();
         private List<string> _overriden = new List<string>();
-
+        private List<string> _readonly = new List<string>();
+        private List<string> _bindingToUI = new List<string>();
 
         public NotifiableObject(ErrorHandler handler = null)
         {
@@ -49,47 +49,89 @@ namespace Framework
             }
         }
 
+        public void SetReadOnlyMode(bool readOnly)
+        {
+            ReadOnlyMode = readOnly;
+        }
+
+        public void BindToUI(string propertyName)
+        {
+            _bindingToUI.Add(propertyName);
+        }
+
+        public void SetReadOnly(string propertyName, bool readOnly)
+        {
+            if (readOnly)
+            {
+                if (!_readonly.Contains(propertyName))
+                {
+                    _readonly.Add(propertyName);
+                }
+            }
+            else
+            {
+                if (_readonly.Contains(propertyName))
+                {
+                    _readonly.Remove(propertyName);
+                }
+            }
+        }
+
         public bool IsAopWapper { get { return this is IAdvised && this is IAopProxy; } }
 
         public object Invoke(IMethodInvocation invocation)
         {
-            if (invocation.Arguments.Length != 1)
+            string propertyName = invocation.Method.Name.Substring(3);
+            if (ReadOnlyMode)
             {
-                throw new Exception("only listen the property changing event of an instance");
+                Logger.Debug("notifier is readonly");
+                return invocation.Arguments[0];
             }
 
-            string propertyName = invocation.Method.Name.Substring(3);
+            if (_readonly.Contains(propertyName))
+            {
+                Logger.DebugFormat("notifier is readonly, property {0} can't change", propertyName);
+                return invocation.Arguments[0];
+            }
+
+            if (invocation.Arguments.Length != 1)
+            {
+                Logger.Error("only listen the property changing event of an instance, other method not support.");
+                throw new Exception("only listen the property changing event of an instance, other method not support.");
+            }
+
             var info = this.GetType().GetProperty(propertyName);
-            PropertyChangedEventArgs args = new PropertyChangedEventArgs()
+            PropertyChangedEventArgsEx args = new PropertyChangedEventArgsEx(propertyName)
             {
                 Source = this,
                 NewValue = invocation.Arguments[0],
                 OldValue = info.GetValue(this),
-                PropertyName = propertyName,
                 UserInited = _initialization == 0,
                 UIChanged = UIChanged
             };
             object rval;
-            lock (_syncObj)
-            {
-                UIChanged = false;
-                RaisePropertyChangingEvent(args);
-                rval = invocation.Proceed();
-                RaisePropertyChangedEvent(args);
-            }
+
+            UIChanged = false;
+            RaisePropertyChangingEvent(args);
+            rval = invocation.Proceed();
+            RaisePropertyChangedEvent(args);
 
             return rval;
         }
 
-        private void RaisePropertyChangingEvent(PropertyChangedEventArgs args)
+        private void RaisePropertyChangingEvent(PropertyChangedEventArgsEx args)
         {
             InvokeEventAndRepositoryRegisterHandlers(args, PropertyChangeEvent.Changing);
             HandleErrors();
         }
 
-        private void RaisePropertyChangedEvent(PropertyChangedEventArgs args)
+        private void RaisePropertyChangedEvent(PropertyChangedEventArgsEx args)
         {
             InvokeEventAndRepositoryRegisterHandlers(args, PropertyChangeEvent.Changed);
+            if (_bindingToUI.Contains(args.PropertyName) && PropertyChanged != null)
+            {
+                PropertyChanged(this, args);
+            }
             HandleErrors();
         }
 
@@ -125,15 +167,17 @@ namespace Framework
             }
         }
 
-        private void InvokeEventAndRepositoryRegisterHandlers(PropertyChangedEventArgs args, PropertyChangeEvent period)
+        private void InvokeEventAndRepositoryRegisterHandlers(PropertyChangedEventArgsEx args, PropertyChangeEvent period)
         {
             //var repository = period == PropertyChangeEvent.Changing ? _notifiedChangingRepository : _notifiedChangedRepository;
             var commonEvent = period == PropertyChangeEvent.Changing ? PropertyChangingEx : PropertyChangedEx;
             var eventName = period == PropertyChangeEvent.Changed ? "Changed" : "Changing";
+            var stackitem = new KeyValuePair<NotifiableObject, string>(this, args.PropertyName);
             try
             {
-                if (!_eventStack.Contains(args.PropertyName))
+                if (!_eventStack.Contains(stackitem))
                 {
+                    _eventStack.Push(stackitem);
                     if (commonEvent != null)
                     {
                         commonEvent(this, args);
@@ -143,15 +187,10 @@ namespace Framework
                         Logger.InfoFormat("{0} change property {1} again, {2} event don't be raised.", this.GetType().BaseType.FullName, args.PropertyName, eventName);
                     }
                 }
-
-                //if (repository.ContainsKey(this))
-                //{
-                //    if (repository[this] != null && repository[this][args.PropertyName] != null)
-                //    {
-                //        var handler = repository[this][args.PropertyName];
-                //        handler(this, args);
-                //    }
-                //}
+                else
+                {
+                    return;
+                }
             }
             catch (PropertyChangeException pce)
             {
@@ -174,6 +213,8 @@ namespace Framework
                     Logger.ErrorFormat("Error occur when {0} property {1}", eventName, args.PropertyName);
                 }
             }
+
+            _eventStack.Pop();
         }
 
         public void ClearError(string propertyName)

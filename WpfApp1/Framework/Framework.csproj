@@ -64,7 +64,7 @@
     <Compile Include="Strategy.cs" />
     <Compile Include="StrategyController.cs" />
     <Compile Include="StrategyRegistry.cs" />
-    <Compile Include="UiModel.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

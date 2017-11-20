@@ -5,14 +5,14 @@ using System.Reflection;
 
 namespace Framework
 {
-    public class Strategy<T> : Strategy where T : UiModel
+    public class Strategy<T> : Strategy where T : Model
     {
         protected ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private Strategy _parent = null;
         private StrategyRegistry _registry = null;
         private Dictionary<string, PropertyChangedHandlerEx> _actions = null;
         private List<NotifiableObject> _registered = new List<NotifiableObject>();
-        protected UiModel UIModel { get; set; }
+        protected Model UIModel { get; set; }
 
         public Strategy(Strategy parent)
         {
@@ -26,7 +26,7 @@ namespace Framework
             }
         }
 
-        private void Invoke(object notifier, PropertyChangedEventArgs args, PropertyChangeEvent eventType)
+        private void Invoke(object notifier, PropertyChangedEventArgsEx args, PropertyChangeEvent eventType)
         {
             var sender = notifier as NotifiableObject;
             _registry.Invoke(sender, args, eventType);
@@ -162,7 +162,7 @@ namespace Framework
             throw new NotImplementedException();
         }
 
-        public override void BindUiModel(UiModel uiModel)
+        public override void BindUiModel(Model uiModel)
         {
             UIModel = uiModel;
             uiModel.Bind();
@@ -188,6 +188,6 @@ namespace Framework
         public abstract void InitializationUiModel();
         public abstract void PostInitializationUiModel();
         public abstract void RegisterProperties();
-        public abstract void BindUiModel(UiModel uiModel);
+        public abstract void BindUiModel(Model uiModel);
     }
 }

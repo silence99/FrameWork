@@ -1,6 +1,6 @@
 ﻿namespace Framework
 {
-    public delegate void PropertyChangedHandlerEx(object sender, PropertyChangedEventArgs args);
+    public delegate void PropertyChangedHandlerEx(object sender, PropertyChangedEventArgsEx args);
     public interface INotifyPropertyChangedEx
     {
         event PropertyChangedHandlerEx PropertyChangedEx;

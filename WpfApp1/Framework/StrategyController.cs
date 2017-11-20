@@ -2,7 +2,7 @@
 
 namespace Framework
 {
-    public class StrategyController<T> : Strategy<T> where T : UiModel
+    public class StrategyController<T> : Strategy<T> where T : Model
     {
         IList<Strategy> _stategies = null;
         public StrategyController(Strategy parent, T uiModel, IList<Strategy> strategies) :
@@ -17,7 +17,7 @@ namespace Framework
             PostInitializationUiModel();
         }
 
-        public override void BindUiModel(UiModel uiModel)
+        public override void BindUiModel(Model uiModel)
         {
             if (_stategies != null)
             {

@@ -4,14 +4,14 @@ namespace Framework
 {
     public class PropertyInterceptor : IMethodInterceptor
     {
-        private NotifiableObject Notify { get; set; }
+        private NotifiableObject Notifier { get; set; }
         public PropertyInterceptor(NotifiableObject obj)
         {
-            Notify = obj;
+            Notifier = obj;
         }
         public object Invoke(IMethodInvocation invocation)
         {
-            return Notify.Invoke(invocation);
+            return Notifier.Invoke(invocation);
         }
     }
 }

@@ -10,7 +10,8 @@ namespace Framework
             var factory = new ProxyFactory(obj) { ProxyTargetType = true };
             DefaultPointcutAdvisor advisor = new DefaultPointcutAdvisor(new PropertyMethodMatchPointcut(), new PropertyInterceptor(obj));
             factory.AddAdvisor(advisor);
-            return (T)factory.GetProxy();
+            obj.AopWapper = factory.GetProxy();
+            return (T)obj.AopWapper;
         }
     }
 }

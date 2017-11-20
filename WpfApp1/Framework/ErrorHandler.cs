@@ -8,6 +8,6 @@ namespace Framework
 {
     public abstract class ErrorHandler
     {
-        public abstract void HandleError(NotifiableObject source, PropertyChangedEventArgs args);
+        public abstract void HandleError(NotifiableObject source, PropertyChangedEventArgsEx args);
     }
 }

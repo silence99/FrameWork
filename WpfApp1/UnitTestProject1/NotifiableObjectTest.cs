@@ -1,5 +1,7 @@
 ﻿using Framework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace UnitTestProject1
 {
@@ -9,6 +11,14 @@ namespace UnitTestProject1
         [TestMethod]
         public void TestCreateAop()
         {
+        }
+        [TestMethod]
+        public void TestStackContains()
+        {
+            Stack<KeyValuePair<NotifiableObject, string>> stack = new Stack<KeyValuePair<NotifiableObject, string>>();
+            var obj = new NotifiableObject();
+            stack.Push(new KeyValuePair<NotifiableObject, string>(obj, "Name"));
+            Assert.IsTrue(stack.Contains(new KeyValuePair<NotifiableObject, string>(obj, "Name")));
         }
     }
 
