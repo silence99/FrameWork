@@ -31,6 +31,10 @@ namespace Framework
         private List<string> _overriden = new List<string>();
         private List<string> _readonly = new List<string>();
         private List<string> _bindingToUI = new List<string>();
+        protected Dictionary<string, bool> _disabled = new Dictionary<string, bool>();
+        protected Dictionary<string, bool> _required = new Dictionary<string, bool>();
+        protected Dictionary<string, object> _invisiabled = new Dictionary<string, object>();
+        private static NotifierManager _notifyManager = new NotifierManager();
 
         public NotifiableObject(ErrorHandler handler = null)
         {
@@ -49,14 +53,15 @@ namespace Framework
             }
         }
 
+        public virtual void SetVisiable(string refProperty, object visiable) { }
+        public virtual void SetRequired(string refProperty, bool required) { }
+        public virtual void SetEnbaled(string refProperty, bool enabled)
+        {
+        }
+
         public void SetReadOnlyMode(bool readOnly)
         {
             ReadOnlyMode = readOnly;
-        }
-
-        public void BindToUI(string propertyName)
-        {
-            _bindingToUI.Add(propertyName);
         }
 
         public void SetReadOnly(string propertyName, bool readOnly)
@@ -101,6 +106,14 @@ namespace Framework
             }
 
             var info = this.GetType().GetProperty(propertyName);
+            var val = invocation.Arguments[0];
+            var oldValue = info.GetValue(this);
+            if (val == oldValue)
+            {
+                Logger.InfoFormat("property {0} of type [{1}] not change, new value equle old value.", propertyName, this.GetType().BaseType.FullName);
+                return val;
+            }
+
             PropertyChangedEventArgsEx args = new PropertyChangedEventArgsEx(propertyName)
             {
                 Source = this,
@@ -128,10 +141,7 @@ namespace Framework
         private void RaisePropertyChangedEvent(PropertyChangedEventArgsEx args)
         {
             InvokeEventAndRepositoryRegisterHandlers(args, PropertyChangeEvent.Changed);
-            if (_bindingToUI.Contains(args.PropertyName) && PropertyChanged != null)
-            {
-                PropertyChanged(this, args);
-            }
+            _notifyManager.RegisterToNotify(this, args.PropertyName);
             HandleErrors();
         }
 
@@ -225,6 +235,24 @@ namespace Framework
         public void ChangeFromUI()
         {
             UIChanged = true;
+        }
+
+        public virtual void ApplyToUI(string property)
+        {
+            throw new NotImplementedException("Apply to UI not implemented");
+        }
+
+        protected void TriggerNotifyToUIEvent(PropertyChangedEventArgs args)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, args);
+            }
+        }
+
+        protected virtual void ApplyMetaDataToUI()
+        {
+            throw new NotImplementedException("Apply meta data to UI not implemented");
         }
     }
 }

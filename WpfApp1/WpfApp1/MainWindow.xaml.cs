@@ -76,6 +76,17 @@ namespace WpfApp1
             }
         }
 
+        public SubData Sub
+        {
+            get; set;
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
+    }
+
+    public class SubData
+    {
+        public string SubName { get; set; }
     }
 }

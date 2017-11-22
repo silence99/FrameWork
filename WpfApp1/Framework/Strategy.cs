@@ -5,14 +5,13 @@ using System.Reflection;
 
 namespace Framework
 {
-    public class Strategy<T> : Strategy where T : Model
+    public class Strategy<T> : Strategy where T : NotifiableObject
     {
         protected ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private Strategy _parent = null;
         private StrategyRegistry _registry = null;
         private Dictionary<string, PropertyChangedHandlerEx> _actions = null;
         private List<NotifiableObject> _registered = new List<NotifiableObject>();
-        protected Model UIModel { get; set; }
 
         public Strategy(Strategy parent)
         {
@@ -161,12 +160,6 @@ namespace Framework
         {
             throw new NotImplementedException();
         }
-
-        public override void BindUiModel(Model uiModel)
-        {
-            UIModel = uiModel;
-            uiModel.Bind();
-        }
     }
 
     public abstract class Strategy : IStrategy
@@ -188,6 +181,5 @@ namespace Framework
         public abstract void InitializationUiModel();
         public abstract void PostInitializationUiModel();
         public abstract void RegisterProperties();
-        public abstract void BindUiModel(Model uiModel);
     }
 }

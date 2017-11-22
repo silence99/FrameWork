@@ -2,5 +2,7 @@ bin/
 obj/
 .suo
 .vs/
-storage.ide
+WpfApp1/.vs/WpfApp1/v15/sqlite3/storage.ide
+WpfApp1/.vs/WpfApp1/v15/.suo
+packages/
 v15/

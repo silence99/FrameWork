@@ -12,7 +12,7 @@
         </Grid.Resources>
         <DockPanel DataContext="{StaticResource btnContent}">
             <Button Name="btnTest"  Content="{Binding Path=Name}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="173" Height="77"/>
-            <Label Content="{Binding Path=Span}" Height="42" Width="293" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Label Content="{Binding Path=Name}" Height="42" Width="293" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         </DockPanel>
     </Grid>
 </Window>
